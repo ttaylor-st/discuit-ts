@@ -7,23 +7,23 @@ export type TimeString = string;
  * @name InitialResponse
  * @description The response from the initial request to the server.
  */
-export type InitialResponse = {
-	reportReasons: ReportReason[];
-	user: User | null;
-	communities: Community[];
+export type InitialResponseData = {
+	reportReasons: ReportReasonData[];
+	user: UserData | null;
+	communities: CommunityData[];
 	noUsers: number;
 	bannedFrom: string[] | null;
 	vapidPublicKey: string;
 	mutes: {
-		communityMutes: Mute[];
-		userMutes: Mute[];
+		communityMutes: MuteData[];
+		userMutes: MuteData[];
 	};
 };
 
 /**
  * Represents a comment in the Discuit API.
  */
-export type Comment = {
+export type CommentData = {
 	/** The ID of the comment. */
 	id: string;
 	/** The ID of the post the comment belongs to. */
@@ -79,7 +79,7 @@ export type Comment = {
 	deletedAs?: "normal" | "admins" | "mods";
 
 	/** The User object of the author of the comment. */
-	author: User;
+	author: UserData;
 	/** Whether the author is muted by the authenticated user. If not authenticated, this is undefined. */
 	isAuthorMuted?: boolean;
 
@@ -99,7 +99,7 @@ export type Comment = {
 /**
  * Represents a community in the Discuit API.
  */
-export type Community = {
+export type CommunityData = {
 	/** The ID of the community. */
 	id: string;
 	/** ID of the user who created the community. */
@@ -116,9 +116,9 @@ export type Community = {
 	noMembers: number;
 
 	/** The community icon. */
-	proPic: Image;
+	proPic: ImageData;
 	/** The community banner image. */
-	bannerImage: Image;
+	bannerImage: ImageData;
 
 	/** The time at which the community was created. */
 	createdAt: TimeString;
@@ -134,9 +134,9 @@ export type Community = {
 	userMod: boolean;
 
 	/** The User objects of all of the moderators of the community. */
-	mods: User[];
+	mods: UserData[];
 	/** The list of community rules. The list is empty if there are no rules. */
-	rules: CommunityRule[];
+	rules: CommunityRuleData[];
 
 	/** Only visible to moderators of the community, otherwise null. */
 	ReportDetails: {
@@ -152,7 +152,7 @@ export type Community = {
 /**
  * Represents a rule for a community in the Discuit API.
  */
-export type CommunityRule = {
+export type CommunityRuleData = {
 	/** The ID of the community rule. */
 	id: number;
 
@@ -175,7 +175,7 @@ export type CommunityRule = {
 /**
  * Represents an image in the Discuit API.
  */
-export type Image = {
+export type ImageData = {
 	/** The ID of the image. */
 	id: string;
 
@@ -197,13 +197,13 @@ export type Image = {
 	/** A link to the image. The path is not prefixed with /api. */
 	url: string;
 	/** A list of copies of the image in different sizes. */
-	copies: ImageCopy[];
+	copies: ImageCopyData[];
 };
 
 /**
  * Represents a copy of an image in the Discuit API.
  */
-export type ImageCopy = {
+export type ImageCopyData = {
 	/** The name of the image copy, used to identify it. */
 	name?: string;
 
@@ -227,7 +227,7 @@ export type ImageCopy = {
 /**
  * Represents a list in the Discuit API.
  */
-export type List = {
+export type ListData = {
 	/** The ID of the list. */
 	id: number;
 	/** The ID of the list owner. */
@@ -255,7 +255,7 @@ export type List = {
 /**
  * Represents an item in a list in the Discuit API.
  */
-export type ListItem = {
+export type ListItemData = {
 	/** The ID of the list item. */
 	id: number;
 	/** The ID of the list in which this is an item. */
@@ -267,13 +267,13 @@ export type ListItem = {
 	/** The time at which this list item was created (when the post/comment was added to the list). */
 	createdAt: TimeString;
 	/** The original post or comment object. */
-	targetItem: Post | Comment;
+	targetItem: PostData | Comment;
 };
 
 /**
  * Represents a mute action in the Discuit API.
  */
-export type Mute = {
+export type MuteData = {
 	/** The ID of the mute. */
 	id: string;
 	/** Whether a user or community is being muted. */
@@ -287,15 +287,15 @@ export type Mute = {
 	createdAt: TimeString;
 
 	/** If a user is being muted, the User object of the user, otherwise undefined. */
-	mutedUser?: User;
+	mutedUser?: UserData;
 	/** If a community is being muted, the Community object of the community, otherwise undefined. */
-	mutedCommunity?: Community;
+	mutedCommunity?: CommunityData;
 };
 
 /**
  * Represents a notification in the Discuit API.
  */
-export type Notification = {
+export type NotificationData = {
 	/** The ID of the notification. */
 	id: number;
 
@@ -309,12 +309,12 @@ export type Notification = {
 
 	/** The content of the notification. The structure of this object will vary based on the type of notification. */
 	notif:
-		| NewVotesNotif
-		| DeletedPostNotif
-		| NewCommentNotif
-		| CommentReplyNotif
-		| NewBadgeNotif
-		| ModAddNotif;
+		| NewVotesNotifData
+		| DeletedPostNotifData
+		| NewCommentNotifData
+		| CommentReplyNotifData
+		| NewBadgeNotifData
+		| ModAddNotifData;
 
 	/** Whether the notification was seen by the authenticated user. */
 	seen: boolean;
@@ -327,7 +327,7 @@ export type Notification = {
 /**
  * Represents a notification for new votes in the Discuit API.
  */
-export type NewVotesNotif = {
+export type NewVotesNotifData = {
 	/** The number of votes the post or comment received. */
 	noVotes: number;
 	/** The ID of the post or comment that was voted on. */
@@ -335,19 +335,19 @@ export type NewVotesNotif = {
 	/** The type of the target. */
 	targetType: "post" | "comment";
 	/** The target item, either of type `Comment` if `targetType` is "comment" or `Post` otherwise. */
-	post: Post | Comment;
+	post: PostData | CommentData;
 	/** Only present if the `targetType` is "comment". */
-	comment?: Comment;
+	comment?: CommentData;
 };
 
 /**
  * Represents a notification for a deleted post in the Discuit API.
  */
-export type DeletedPostNotif = {
+export type DeletedPostNotifData = {
 	/** The user group that deleted the post. */
 	deletedAs: "mods" | "admins";
 	/** The post that was deleted. */
-	post: Post;
+	post: PostData;
 	/** The ID of the post that was deleted. */
 	targetId: string;
 	/** The type of the target. */
@@ -357,7 +357,7 @@ export type DeletedPostNotif = {
 /**
  * Represents a notification for a new comment in the Discuit API.
  */
-export type NewCommentNotif = {
+export type NewCommentNotifData = {
 	/** The username of the comment author. */
 	commentAuthor: string;
 	/** The ID of the comment. */
@@ -367,7 +367,7 @@ export type NewCommentNotif = {
 	/** The number of new comments on the post. */
 	noComments: number;
 	/** The parent post. */
-	post: Post;
+	post: PostData;
 	/** The ID of the post. */
 	postId: string;
 };
@@ -375,7 +375,7 @@ export type NewCommentNotif = {
 /**
  * Represents a notification for a comment reply in the Discuit API.
  */
-export type CommentReplyNotif = {
+export type CommentReplyNotifData = {
 	/** The username of the comment author. */
 	commentAuthor: string;
 	/** The ID of the comment. */
@@ -387,7 +387,7 @@ export type CommentReplyNotif = {
 	/** The ID of the parent comment. */
 	parentCommitId: string;
 	/** The parent post. */
-	post: Post;
+	post: PostData;
 	/** The ID of the post. */
 	postId: string;
 };
@@ -395,21 +395,21 @@ export type CommentReplyNotif = {
 /**
  * Represents a notification for a new badge in the Discuit API.
  */
-export type NewBadgeNotif = {
+export type NewBadgeNotifData = {
 	/** The type of the badge. */
 	badgeType: string;
 	/** The user who received the badge. */
-	user: User;
+	user: UserData;
 };
 
 /**
  * Represents a notification for adding a moderator in the Discuit API.
  */
-export type ModAddNotif = {
+export type ModAddNotifData = {
 	/** The username of the user who added the mod. */
 	addedBy: string;
 	/** The community where the user was added as a mod. */
-	community: Community;
+	community: CommunityData;
 	/** The name of the community. */
 	communityName: string;
 };
@@ -417,7 +417,7 @@ export type ModAddNotif = {
 /**
  * Represents a post in the Discuit API.
  */
-export type Post = {
+export type PostData = {
 	/** The ID of the post */
 	id: string;
 	/** The type of post */
@@ -446,16 +446,16 @@ export type Post = {
 	/** The name of that community */
 	communityName: string;
 	/** The profile picture of that community */
-	communityProPic: Image;
+	communityProPic: ImageData;
 	/** The banner image of that community */
-	communityBannerImage: Image;
+	communityBannerImage: ImageData;
 
 	/** Greater than 3 characters */
 	title: string;
 	/** Body of the post (only valid for text posts, null otherwise) */
 	body: string | null;
 	/** The posted image (only valid for image posts, null otherwise) */
-	image: Image | null;
+	image: ImageData | null;
 	/** The URL of the link. */
 	link:
 		| {
@@ -463,7 +463,7 @@ export type Post = {
 				/** The hostname of the link. For a URL of "https://discuit.net", this would be "discuit.net". */
 				hostname: string;
 				/** The image object of the OpenGraph image on the site. If no OpenGraph image was found, this is null. */
-				image: Image | null;
+				image: ImageData | null;
 		  }
 		| undefined;
 
@@ -521,15 +521,15 @@ export type Post = {
 	isCommunityMuted: boolean;
 
 	/** The Community object of the community that the post is in. */
-	community: Community | undefined;
+	community: CommunityData | undefined;
 	/** The User object of the author of the post. */
-	author: User;
+	author: UserData;
 };
 
 /**
  * Represents a report in the Discuit API.
  */
-export type Report = {
+export type ReportData = {
 	/** The ID of the report. */
 	id: number;
 	/** The ID of the community in which the report was made. */
@@ -558,13 +558,13 @@ export type Report = {
 	/** The time that the report was created. */
 	createdAt: TimeString;
 	/** The Comment or Post objected that the report is made against. */
-	target: Comment | Post;
+	target: Comment | PostData;
 };
 
 /**
  * Represents a reason for a report in the Discuit API.
  */
-export type ReportReason = {
+export type ReportReasonData = {
 	id: number;
 	title: string;
 	description: string | null;
@@ -573,7 +573,7 @@ export type ReportReason = {
 /**
  * Represents a user in the Discuit API.
  */
-export type User = {
+export type UserData = {
 	/** The ID of the user. */
 	id: string;
 	/** The username of the user. Minimum 3 characters. Maximum 21 characters. */
@@ -592,9 +592,9 @@ export type User = {
 	/** If the user is an admin. */
 	isAdmin: boolean;
 	/** If a profile picture was set, the profile picture of the user, otherwise null. */
-	proPic: Image | null;
+	proPic: ImageData | null;
 	/** The list of badges that the user has, can be empty. */
-	badges: Badge[];
+	badges: BadgeData[];
 
 	/** The number of posts the user has made. */
 	noPosts: number;
@@ -630,13 +630,13 @@ export type User = {
 	notificationsNewCount: number;
 
 	/** If the user is a moderator in any communities, the list of communities that the user moderates, otherwise null. */
-	moddingList: Community[] | null;
+	moddingList: CommunityData[] | null;
 };
 
 /**
  * Represents a badge in the Discuit API.
  */
-export type Badge = {
+export type BadgeData = {
 	/** The ID of the badge. */
 	id: number;
 	/** The type of badge. */

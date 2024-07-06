@@ -49,7 +49,7 @@ export default class DiscuitClient {
 		options: RequestOptions = {},
 	): Promise<T> {
 		// TODO: Catch handle errors
-		const headers: Record<string, string> = {
+		const headers: RequestOptions["headers"] = {
 			...options.headers,
 		};
 

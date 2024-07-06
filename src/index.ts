@@ -1,1 +1,3 @@
-console.log("Hello via Bun!");
+import DiscuitClient, { type ApiConfig } from "./DiscuitClient";
+
+export { DiscuitClient, type ApiConfig };

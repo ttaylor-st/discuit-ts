@@ -1,4 +1,4 @@
-import type {CommentData, PostData, UserData} from "./types";
+import type { CommentData, PostData, UserData } from "./types";
 
 export interface ApiConfig {
 	baseURL?: string;
@@ -83,7 +83,7 @@ export default class DiscuitClient {
 
 	async login(username: string, password: string): Promise<UserData> {
 		return await this.request<UserData>("POST", "_login", {
-			body: JSON.stringify({username, password}),
+			body: JSON.stringify({ username, password }),
 		});
 	}
 

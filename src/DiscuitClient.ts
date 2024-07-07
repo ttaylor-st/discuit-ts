@@ -1,4 +1,4 @@
-import type { CommentData, PostData, UserData } from "./types";
+import type {CommentData, PostData, UserData} from "./types";
 
 export interface ApiConfig {
 	baseURL?: string;
@@ -82,9 +82,110 @@ export default class DiscuitClient {
 	}
 
 	async login(username: string, password: string): Promise<UserData> {
-		const data = await this.request<UserData>("POST", "_login", {
-			body: JSON.stringify({ username, password }),
+		return await this.request<UserData>("POST", "_login", {
+			body: JSON.stringify({username, password}),
 		});
-		return data;
+	}
+
+	async getPost(id: string): Promise<Post> {
+		const data = await this.request<PostData>("GET", `posts/${id}`);
+		return new Post(data, this);
+	}
+
+	async upvotePost(id: string): Promise<Post> {
+		const post: PostData = await this.request("POST", "_postVote", {
+			body: JSON.stringify({
+				postId: id,
+				up: true,
+			}),
+		});
+
+		return new Post(post, this);
+	}
+
+	async downvotePost(id: string): Promise<Post> {
+		const post: PostData = await this.request("POST", "_postVote", {
+			body: JSON.stringify({
+				postId: id,
+				up: false,
+			}),
+		});
+
+		return new Post(post, this);
+	}
+
+	async deletePost(
+		id: string,
+		deleteAs?: string,
+		deleteContent?: boolean,
+	): Promise<Post> {
+		const post: PostData = await this.request("DELETE", `posts/${id}`, {
+			params: {
+				deleteAs: deleteAs || "normal",
+				deleteContent: deleteContent ? "true" : "false",
+			},
+		});
+
+		return new Post(post, this);
+	}
+
+	async updatePost(id: string, title?: string, body?: string): Promise<Post> {
+		const post: PostData = await this.request("PUT", `posts/${id}`, {
+			body: JSON.stringify({ title, body }),
+		});
+
+		return new Post(post, this);
+	}
+
+	async comment(id: string, body: string, parentId?: string): Promise<Comment> {
+		const comment: CommentData = await this.request(
+			"POST",
+			`posts/${id}/comments`,
+			{
+				body: JSON.stringify({ body, parentCommentId: parentId || null }),
+			},
+		);
+
+		return new Comment(comment, this);
+	}
+}
+
+export class Post {
+	private client: DiscuitClient;
+	public readonly data: PostData;
+
+	constructor(data: PostData, client: DiscuitClient) {
+		this.client = client;
+		this.data = data;
+	}
+
+	async upvote(): Promise<Post> {
+		return this.client.upvotePost(this.data.id);
+	}
+	async downvote(): Promise<Post> {
+		return this.client.downvotePost(this.data.id);
+	}
+	async delete(deleteAs?: string, deleteContent?: boolean): Promise<Post> {
+		return this.client.deletePost(this.data.publicId, deleteAs, deleteContent);
+	}
+	async edit(title?: string, body?: string): Promise<Post> {
+		return this.client.updatePost(
+			this.data.id,
+			title ?? this.data.title,
+			body ?? (this.data?.body || undefined),
+		);
+	}
+	async comment(body: string): Promise<Comment> {
+		return this.client.comment(this.data.id, body);
+	}
+}
+
+export class Comment {
+	private client: DiscuitClient;
+	public readonly data: CommentData;
+
+	constructor(data: CommentData, client: DiscuitClient) {
+		this.client = client;
+		this.data = data;
 	}
 }

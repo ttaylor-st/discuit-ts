@@ -80,4 +80,11 @@ export default class DiscuitClient {
 		const response = await this.request("GET", "_initial");
 		if (!this.csrfToken || !this.sid) throw new Error("Initialization failed");
 	}
+
+	async login(username: string, password: string): Promise<UserData> {
+		const data = await this.request<UserData>("POST", "_login", {
+			body: JSON.stringify({ username, password }),
+		});
+		return data;
+	}
 }

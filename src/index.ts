@@ -1,3 +1,3 @@
-import DiscuitClient, { type ApiConfig } from "./DiscuitClient";
+import { type ApiConfig, DiscuitClient } from "./DiscuitClient";
 
 export { DiscuitClient, type ApiConfig };

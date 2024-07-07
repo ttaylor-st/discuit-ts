@@ -1,44 +1,36 @@
-import axios, {
-	type AxiosInstance,
-	type AxiosRequestConfig,
-	type AxiosResponse,
-} from "axios";
+import type { CommentData, PostData, UserData } from "./types";
 
 export interface ApiConfig {
-	baseURL: string;
+	baseURL?: string;
 }
 
-interface RequestOptions extends AxiosRequestConfig {}
+interface RequestOptions extends RequestInit {
+	params?: Record<string, string>;
+}
 
 export default class DiscuitClient {
-	private axiosInstance: AxiosInstance;
 	private csrfToken: string | null = null;
 	private sid: string | null = null;
+	private baseURL: string;
 
 	constructor(config: ApiConfig) {
-		this.axiosInstance = axios.create({
-			baseURL: config.baseURL,
-			withCredentials: true,
-		});
-
-		this.axiosInstance.interceptors.response.use(this.handleResponse);
+		this.baseURL =
+			config.baseURL?.replace(/\/?$/, "/") || "http://discuit.net/api/";
 	}
 
-	private handleResponse = (response: AxiosResponse): AxiosResponse => {
-		const cookies = response.headers["set-cookie"];
-		if (!cookies) return response;
-
-		for (const cookie of cookies) {
-			if (cookie.startsWith("csrfToken="))
-				this.csrfToken = cookie.split(";")[0].split("=")[1];
-			else if (cookie.startsWith("sid="))
-				this.sid = cookie.split(";")[0].split("=")[1];
+	private handleResponse = (response: Response): Response => {
+		const cookies = response.headers.getAll("set-cookie");
+		if (cookies) {
+			for (const cookie of cookies) {
+				if (cookie.startsWith("csrftoken="))
+					this.csrfToken = cookie.split(";")[0].split("=")[1];
+				else if (cookie.startsWith("SID="))
+					this.sid = cookie.split(";")[0].split("=")[1];
+			}
 		}
 
-		const headerCsrfToken = response.headers["csrf-token"];
-		if (headerCsrfToken) {
-			this.csrfToken = headerCsrfToken;
-		}
+		const headerCsrfToken = response.headers.get("csrf-token");
+		if (headerCsrfToken) this.csrfToken = headerCsrfToken;
 
 		return response;
 	};
@@ -48,27 +40,44 @@ export default class DiscuitClient {
 		url: string,
 		options: RequestOptions = {},
 	): Promise<T> {
-		// TODO: Catch handle errors
-		const headers: RequestOptions["headers"] = {
-			...options.headers,
-		};
+		const headers = new Headers(options.headers);
 
-		// Add CSRF token for non-GET requests
 		if (method.toUpperCase() !== "GET" && this.csrfToken) {
-			headers["X-Csrf-Token"] = this.csrfToken;
+			headers.set("X-Csrf-Token", this.csrfToken);
 		}
 
-		const response = await this.axiosInstance.request<T>({
-			method,
-			url,
-			...options,
-			headers,
-		});
-		return response.data;
+		headers.set("Cookie", `SID=${this.sid}; csrftoken=${this.csrfToken}`);
+
+		const fullUrl: URL = new URL(url, this.baseURL);
+		if (options.params) {
+			for (const [key, value] of Object.entries(options.params)) {
+				fullUrl.searchParams.append(key, value);
+			}
+		}
+
+		try {
+			let response = await fetch(fullUrl.toString(), {
+				method,
+				...options,
+				headers,
+			});
+
+			response = this.handleResponse(response);
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const data = await response.json();
+			return data as T;
+		} catch (error) {
+			console.error("Request failed:", error);
+			throw error;
+		}
 	}
 
 	async initialize(): Promise<void> {
-		const response = await this.request("GET", "/_initial");
+		const response = await this.request("GET", "_initial");
 		if (!this.csrfToken || !this.sid) throw new Error("Initialization failed");
 	}
 }

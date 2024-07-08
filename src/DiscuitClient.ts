@@ -3,6 +3,9 @@ import type {
 	InitialResponseData,
 	PostData,
 	UserData,
+	NormalFeedResponse,
+	ModeratorFeedResponse,
+	NewPostRequest,
 } from "./types";
 
 export interface ApiConfig {
@@ -128,6 +131,87 @@ class DiscuitClient {
 		return await this.request<UserData>("POST", "_login", {
 			body: JSON.stringify({ username, password }),
 		});
+	}
+
+	createPostInstances(postDataArray: PostData[]): Post[] {
+		return postDataArray.map((postData) => new Post(postData, this));
+	}
+
+	/**
+	 * @name getPosts
+	 * @description Fetches posts from the API.
+	 * @returns
+	 */
+	async getPosts(options?: {
+		/** The type of feed to fetch. */
+		feed?: "home" | "all" | "community";
+		/** The sort order of the feed. */
+		sort?:
+			| "latest"
+			| "hot"
+			| "activity"
+			| "day"
+			| "week"
+			| "month"
+			| "year"
+			| "all";
+		/** The filter to apply to the feed. */
+		filter?: "all" | "deleted" | "locked";
+		/** The ID of the community to fetch posts from. */
+		communityId?: string;
+		/** The next page token. */
+		next?: string;
+		/** The maximum number of posts to fetch. */
+		limit?: number;
+	}): Promise<NormalFeedResponse | ModeratorFeedResponse> {
+		const params: Record<string, string> = {};
+
+		params.feed = options?.feed || "home";
+		params.sort = options?.sort || "latest";
+
+		if (options?.filter) params.filter = options.filter;
+		if (options?.communityId) params.communityId = options.communityId;
+		if (options?.next) params.next = options.next;
+		if (options?.limit) params.limit = options.limit.toString();
+		else params.limit = "10";
+
+		return this.request<NormalFeedResponse | ModeratorFeedResponse>(
+			"GET",
+			"posts",
+			{ params },
+		);
+	}
+
+	/**
+	 * @name newPost
+	 * @description Creates a new post.
+	 * @returns {Promise<Post>} A promise that resolves with the new post.
+	 * @async
+	 */
+	async newPost(data: {
+		/** The type of post to create. */
+		type: "text" | "image" | "link";
+		/** The title of the post. */
+		title: string;
+		/** The name of the community to post in. */
+		community: string;
+		/** The content of the post. Only required for text posts. */
+		body?: string;
+		/** The link of the post. Only required for link posts. */
+		link?: string;
+		/** The path to the image. Only required for image posts. */
+		image?: string;
+	}): Promise<Post> {
+		if (data.type === "link" && !data.link)
+			throw new Error("Link is required for link posts.");
+		if (data.type === "image" && !data.image)
+			throw new Error("Image is required for image posts.");
+
+		const post: PostData = await this.request("POST", "posts", {
+			body: JSON.stringify({ ...data }),
+		});
+
+		return new Post(post, this);
 	}
 
 	/**

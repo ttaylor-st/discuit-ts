@@ -20,6 +20,18 @@ export type InitialResponseData = {
 	};
 };
 
+export type NormalFeedResponse = {
+	posts: PostData[];
+	next: string | null;
+};
+
+export type ModeratorFeedResponse = {
+	noPosts: number;
+	limit: number;
+	page: number;
+	posts: PostData[];
+};
+
 /**
  * Represents a comment in the Discuit API.
  */

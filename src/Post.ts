@@ -133,13 +133,13 @@ export class Post {
 	constructor(data: PostData, client: DiscuitClient) {
 		this.client = client;
 
-		Object.assign(this, data);
-
 		if (data.comments) {
 			this.comments = data.comments.map(
 				(commentData) => new Comment(commentData, client),
 			);
 		}
+
+		Object.assign(this, data);
 	}
 
 	/**

@@ -1,3 +1,5 @@
+import {Post} from "./Post";
+import {Comment} from "./Comment";
 import type {
 	CommentData,
 	InitialResponseData,
@@ -15,6 +17,7 @@ interface RequestOptions extends RequestInit {
 	params?: Record<string, string>;
 }
 
+// noinspection JSUnusedGlobalSymbols
 /**
  * @name DiscuitClient
  * @description The main class for interacting with the Discuit API.
@@ -402,95 +405,4 @@ class DiscuitClient {
 	}
 }
 
-/**
- * @name Post
- * @description Class representing a post.
- */
-class Post {
-	/** The client that created this post. */
-	private client: DiscuitClient;
-	/** The data of the post. */
-	public readonly data: PostData;
-
-	/**
-	 * Creates a new instance of the Post class.
-	 *
-	 * @param {PostData} data - The data for the post.
-	 * @param {DiscuitClient} client - The Discuit client instance.
-	 */
-	constructor(data: PostData, client: DiscuitClient) {
-		this.client = client;
-		this.data = data;
-	}
-
-	/**
-	 * @description Upvotes a post.
-	 * @returns {Promise<Post>} A promise that resolves to the upvoted post.
-	 * @async
-	 */
-	async upvote(): Promise<Post> {
-		return this.client.upvotePost(this.data.id);
-	}
-	/**
-	 * @description Downvotes a post.
-	 * @return {Promise<Post>} A Promise that resolves with the downvoted post.
-	 * @async
-	 */
-	async downvote(): Promise<Post> {
-		return this.client.downvotePost(this.data.id);
-	}
-	/**
-	 * @description Deletes a post.
-	 * @param {string} [deleteAs] - The identifier of the user who wants to perform the delete action, either "normal",
-	 * 	"moderator", or "admin".
-	 * @param {boolean} [deleteContent] - True if the content of the post should also be deleted, false otherwise.
-	 * @returns {Promise<Post>} - Promise that resolves with the deleted post.
-	 * @async
-	 */
-	async delete(deleteAs?: string, deleteContent?: boolean): Promise<Post> {
-		return this.client.deletePost(this.data.publicId, deleteAs, deleteContent);
-	}
-	/**
-	 * @description Edits the post with a new title and body.
-	 * @param {string} [title] - The new title for the post. If not provided, the current title will be used.
-	 * @param {string} [body] - The new body for the post. If not provided, the current body will be used.
-	 * @returns {Promise<Post>} - A promise that resolves to the updated post.
-	 * @async
-	 */
-	async edit(title?: string, body?: string): Promise<Post> {
-		return this.client.updatePost(
-			this.data.id,
-			title ?? this.data.title,
-			body ?? (this.data?.body || undefined),
-		);
-	}
-	/**
-	 * @description Posts a comment on the post.
-	 * @param {string} body - The body of the comment.
-	 * @returns {Promise<Comment>} A promise that resolves to the posted comment object.
-	 * @async
-	 */
-	async comment(body: string): Promise<Comment> {
-		return this.client.comment(this.data.id, body);
-	}
-}
-
-/**
- * Represents a comment.
- */
-class Comment {
-	private client: DiscuitClient;
-	public readonly data: CommentData;
-
-	/**
-	 * Creates a new instance of the Comment class.
-	 * @param {CommentData} data The data for the comment.
-	 * @param {DiscuitClient} client The Discuit client instance.
-	 */
-	constructor(data: CommentData, client: DiscuitClient) {
-		this.client = client;
-		this.data = data;
-	}
-}
-
-export { DiscuitClient, Post, Comment };
+export { DiscuitClient };

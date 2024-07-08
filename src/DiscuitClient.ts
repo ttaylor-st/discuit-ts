@@ -316,6 +316,90 @@ class DiscuitClient {
 
 		return new Comment(comment, this);
 	}
+
+	/**
+	 * @name upvoteComment
+	 * @description Upvotes a comment.
+	 * @param {string} id The ID of the comment.
+	 * @async
+	 */
+	async upvoteComment(id: string): Promise<Comment> {
+		const comment: CommentData = await this.request("POST", "_commentVote", {
+			body: JSON.stringify({
+				commentId: id,
+				up: true,
+			}),
+		});
+
+		return new Comment(comment, this);
+	}
+
+	/**
+	 * @name downvoteComment
+	 * @description Downvotes a comment.
+	 * @param {string} id The ID of the comment.
+	 * @async
+	 */
+	async downvoteComment(id: string): Promise<Comment> {
+		const comment: CommentData = await this.request("POST", "_commentVote", {
+			body: JSON.stringify({
+				commentId: id,
+				up: false,
+			}),
+		});
+
+		return new Comment(comment, this);
+	}
+
+	/**
+	 * @name deleteComment
+	 * @description Deletes a comment.
+	 * @param {string} postId The ID of the post.
+	 * @param {string} id The public ID of the comment.
+	 * @param {string} deleteAs The type of deletion, either "normal", "moderator", or "admin".
+	 * @async
+	 */
+	async deleteComment(
+		postId: string,
+		id: string,
+		deleteAs?: string,
+	): Promise<Comment> {
+		const comment: CommentData = await this.request(
+			"DELETE",
+			`posts/${postId}/comments/${id}`,
+			{
+				params: {
+					deleteAs: deleteAs || "normal",
+				},
+			},
+		);
+
+		return new Comment(comment, this);
+	}
+
+	/**
+	 * @name updateComment
+	 * @description Updates a comment.
+	 * @param {string} postId The ID of the post.
+	 * @param {string} body The new body of the comment.
+	 * @param {string} id The public ID of the comment.
+	 * @async
+	 */
+	async updateComment(
+		postId: string,
+		body: string,
+		id: string,
+	): Promise<Comment> {
+		const comment: CommentData = await this.request(
+			"PUT",
+			`posts/${postId}/comments/${id}`,
+			{
+				body: JSON.stringify({ body }),
+			},
+		);
+
+		return new Comment(comment, this);
+	}
 }
 
 /**

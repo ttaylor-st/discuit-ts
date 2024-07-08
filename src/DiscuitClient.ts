@@ -139,6 +139,33 @@ class DiscuitClient {
 		});
 	}
 
+	/**
+	 * @name loginWithSid
+	 * @description Logs in to the API using a session ID.
+	 * @param {string} sid The session ID to log in with.
+	 * @returns {Promise<UserData>} A promise that resolves with the user data.
+	 * @async
+	 */
+	async loginWithSid(sid: string): Promise<UserData> {
+		this.sid = sid;
+		await this.initialize();
+		return await this.getUser();
+	}
+
+	/**
+	 * @name getUser
+	 * @description Fetches a user from the API.
+	 * @param {string} [username] The ID of the user to fetch.
+	 * @returns {Promise<UserData>} A promise that resolves with the user data.
+	 * @async
+	 */
+	async getUser(username?: string): Promise<UserData> {
+		if (!username) {
+			return await this.request<UserData>("GET", "_user");
+		}
+		return await this.request<UserData>("GET", `users/${username}`);
+	}
+
 	createPostInstances(postDataArray: PostData[]): Post[] {
 		return postDataArray.map((postData) => new Post(postData, this));
 	}

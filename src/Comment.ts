@@ -1,5 +1,5 @@
 import type { DiscuitClient } from "./DiscuitClient.ts";
-import type { CommentData, UserData, TimeString } from "./types.ts";
+import type { CommentData, TimeString, UserData } from "./types.ts";
 
 /**
  * Represents a comment.

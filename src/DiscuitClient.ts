@@ -1,5 +1,5 @@
-import {Post} from "./Post";
-import {Comment} from "./Comment";
+import { Comment } from "./Comment";
+import { Post } from "./Post";
 import type {
 	CommentData,
 	InitialResponseData,

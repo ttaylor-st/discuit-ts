@@ -1,11 +1,10 @@
 import type {
 	CommentData,
 	InitialResponseData,
+	ModeratorFeedResponse,
+	NormalFeedResponse,
 	PostData,
 	UserData,
-	NormalFeedResponse,
-	ModeratorFeedResponse,
-	NewPostRequest,
 } from "./types";
 
 export interface ApiConfig {

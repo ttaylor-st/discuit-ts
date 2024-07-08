@@ -1,19 +1,19 @@
 {
 	"name": "discuit-ts",
 	"author": "Taylor <ttaylor-st@murena.io",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "a TypeScript library for interacting with the discuit api.",
 	"license": "MIT",
 	"homepage": "https://github.com/ttaylor-st/discuit-ts?tab=readme-ov-file",
 	"bugs": "https://github.com/ttaylor-st/discuit-ts/issues",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ttaylor-st/discuit-ts.git"
+		"url": "git+https://github.com/ttaylor-st/discuit-ts.git"
 	},
 	"types": "dist/index.d.ts",
 	"main": "dist/index.js",
 	"type": "module",
-	"files": ["dist"],
+	"files": ["dist", "src"],
 	"scripts": {
 		"build": "bun ./build.ts",
 		"biome:check": "bunx @biomejs/biome check --write src",

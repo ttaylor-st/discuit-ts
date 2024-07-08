@@ -1,3 +1,9 @@
+/**
+ * @file Post.ts
+ * @module Post
+ * @description Class representing a post.
+ */
+
 import { Comment } from "./Comment";
 import type { DiscuitClient } from "./DiscuitClient";
 import type {
@@ -8,10 +14,16 @@ import type {
 	UserData,
 } from "./types";
 
-// noinspection JSUnusedGlobalSymbols
 /**
  * @name Post
  * @description Class representing a post.
+ * @example
+ * ```ts
+ * import { Post } from "discuit";
+ *
+ * const post = new Post(client, PostData);
+ * console.log(post.title);
+ * ```
  */
 export class Post {
 	/** The client that created this post. */

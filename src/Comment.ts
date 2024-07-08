@@ -1,10 +1,18 @@
+/**
+ * @file Comment.ts
+ * @module Comment
+ * @description Class representing a comment.
+ */
+
 import type { DiscuitClient } from "./DiscuitClient.ts";
 import type { CommentData, TimeString, UserData } from "./types.ts";
 
 /**
- * Represents a comment.
+ * @name Comment
+ * @description Represents a comment.
  */
 export class Comment {
+	/** The Discuit client instance. */
 	private client: DiscuitClient;
 
 	/** The ID of the comment. */
@@ -79,7 +87,8 @@ export class Comment {
 	public readonly postDeletedAs?: "normal" | "admins" | "mods";
 
 	/**
-	 * Creates a new instance of the Comment class.
+	 * @name constructor
+	 * @description Creates a new instance of the Comment class.
 	 * @param {CommentData} data The data for the comment.
 	 * @param {DiscuitClient} client The Discuit client instance.
 	 */
@@ -90,6 +99,7 @@ export class Comment {
 	}
 
 	/**
+	 * @name upvote
 	 * @description Upvotes a comment.
 	 * @returns {Promise<Comment>} A promise that resolves to the upvoted comment.
 	 * @async
@@ -100,6 +110,7 @@ export class Comment {
 		return this;
 	}
 	/**
+	 * @name downvote
 	 * @description Downvotes a comment.
 	 * @returns {Promise<Comment>} A promise that resolves to the downvoted comment.
 	 * @async
@@ -110,6 +121,7 @@ export class Comment {
 		return this;
 	}
 	/**
+	 * @name delete
 	 * @description Deletes a comment.
 	 * @param {string} [deleteAs] - The identifier of the user who wants to perform the delete action, either "normal",
 	 * 	"moderator", or "admin".
@@ -126,6 +138,7 @@ export class Comment {
 		return this;
 	}
 	/**
+	 * @name edit
 	 * @description Edits the comment with a new body.
 	 * @param {string} body - The new body for the comment.
 	 * @returns {Promise<Comment>} - A promise that resolves to the updated comment.
@@ -141,6 +154,7 @@ export class Comment {
 		return this;
 	}
 	/**
+	 * @name comment
 	 * @description Replies to the comment.
 	 * @param {string} body - The body of the comment.
 	 * @returns {Promise<Comment>} A promise that resolves to the posted comment object.

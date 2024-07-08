@@ -1,3 +1,9 @@
+/**
+ * @file DiscuitClient.ts
+ * @module DiscuitClient
+ * @description The main class for interacting with the Discuit API.
+ */
+
 import { Comment } from "./Comment";
 import { Post } from "./Post";
 import type {
@@ -13,10 +19,21 @@ import type {
 	UserData,
 } from "./types";
 
+/**
+ * @name ApiConfig
+ * @description The configuration for the Discuit API client.
+ * @property {string} baseURL - The base URL for the API.
+ */
 export interface ApiConfig {
+	/** The base URL for the API. */
 	baseURL?: string;
 }
 
+/**
+ * @name RequestOptions
+ * @description Additional options for the request.
+ * @property {Record<string, string>} params - The query parameters for the request.
+ */
 interface RequestOptions extends RequestInit {
 	params?: Record<string, string>;
 }
@@ -25,10 +42,20 @@ interface RequestOptions extends RequestInit {
 /**
  * @name DiscuitClient
  * @description The main class for interacting with the Discuit API.
+ * @example
+ * ```ts
+ * import { DiscuitClient } from "discuit";
+ *
+ * const client = new DiscuitClient({ baseURL: "http://localhost:8000/api/" });
+ * await client.login("username", "password");
+ * const posts = await client.getPosts();
  */
 class DiscuitClient {
+	/** The CSRF token for the client. */
 	private csrfToken: string | null = null;
+	/** The SID for the client. */
 	private sid: string | null = null;
+	/** The base URL for the API. */
 	private readonly baseURL: string;
 
 	/**

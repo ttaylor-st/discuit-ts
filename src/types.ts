@@ -1,3 +1,5 @@
+import type { Post } from "./Post";
+
 /**
  * Represents a time value in RFC 3339 format with sub-second precision.
  */
@@ -30,6 +32,28 @@ export type ModeratorFeedResponse = {
 	limit: number;
 	page: number;
 	posts: PostData[];
+};
+
+export type NormalFeed = {
+	posts: Post[];
+	next: string | null;
+};
+
+export type ModeratorFeed = {
+	noPosts: number;
+	limit: number;
+	page: number;
+	posts: Post[];
+};
+
+export type CommentFeedResponse = {
+	comments: CommentData[];
+	next: string | null;
+};
+
+export type CommentFeed = {
+	comments: Comment[];
+	next: string | null;
 };
 
 /**

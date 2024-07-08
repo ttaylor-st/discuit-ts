@@ -4,7 +4,7 @@
 export type TimeString = string;
 
 /**
- * @name InitialResponse
+ * @name InitialResponseData
  * @description The response from the initial request to the server.
  */
 export type InitialResponseData = {
@@ -145,7 +145,7 @@ export type CommunityData = {
 	/** Indicates whether the authenticated user is a moderator. If not authenticated, this is null. */
 	userMod: boolean;
 
-	/** The User objects of all of the moderators of the community. */
+	/** The User objects of all the moderators of the community. */
 	mods: UserData[];
 	/** The list of community rules. The list is empty if there are no rules. */
 	rules: CommunityRuleData[];
@@ -260,7 +260,7 @@ export type ListData = {
 	sort: "addedDsc" | "addedAsc" | "createdDsc" | "createdAsc";
 	/** The time at which the list was created. */
 	createdAt: TimeString;
-	/** The last time an item was added to the list (for brand new lists this value is the same as createdAt). */
+	/** The last time an item was added to the list (for brand-new lists this value is the same as createdAt). */
 	lastUpdatedAt: TimeString;
 };
 
@@ -279,7 +279,7 @@ export type ListItemData = {
 	/** The time at which this list item was created (when the post/comment was added to the list). */
 	createdAt: TimeString;
 	/** The original post or comment object. */
-	targetItem: PostData | Comment;
+	targetItem: PostData | CommentData;
 };
 
 /**
@@ -518,7 +518,7 @@ export type PostData = {
 	/** Comment count. */
 	noComments: number;
 	/** Comments of the post. */
-	comments: Comment[] | undefined;
+	comments: CommentData[] | undefined;
 	/** Pagination cursor for comments. */
 	commentsNext: string | null;
 
@@ -527,9 +527,9 @@ export type PostData = {
 	/** Indicates whether the authenticated user's vote is an upvote. */
 	userVotedUp: boolean | null;
 
-	/** If the author of the post has been muted by the logged in user. */
+	/** If the author of the post has been muted by the logged-in user. */
 	isAuthorMuted: boolean;
-	/** If the community that the post is in has been muted by the logged in user. */
+	/** If the community that the post is in has been muted by the logged-in user. */
 	isCommunityMuted: boolean;
 
 	/** The Community object of the community that the post is in. */
@@ -570,7 +570,7 @@ export type ReportData = {
 	/** The time that the report was created. */
 	createdAt: TimeString;
 	/** The Comment or Post objected that the report is made against. */
-	target: Comment | PostData;
+	target: CommentData | PostData;
 };
 
 /**

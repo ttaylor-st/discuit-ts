@@ -2,8 +2,12 @@ import { Comment } from "./Comment";
 import { Post } from "./Post";
 import type {
 	CommentData,
+	CommentFeed,
+	CommentFeedResponse,
 	InitialResponseData,
+	ModeratorFeed,
 	ModeratorFeedResponse,
+	NormalFeed,
 	NormalFeedResponse,
 	PostData,
 	UserData,
@@ -165,7 +169,9 @@ class DiscuitClient {
 		next?: string;
 		/** The maximum number of posts to fetch. */
 		limit?: number;
-	}): Promise<NormalFeedResponse | ModeratorFeedResponse> {
+		/** Whether to fetch comments for each post. */
+		comments?: boolean;
+	}): Promise<NormalFeed | ModeratorFeed> {
 		const params: Record<string, string> = {};
 
 		params.feed = options?.feed || "home";
@@ -177,11 +183,19 @@ class DiscuitClient {
 		if (options?.limit) params.limit = options.limit.toString();
 		else params.limit = "10";
 
-		return this.request<NormalFeedResponse | ModeratorFeedResponse>(
-			"GET",
-			"posts",
-			{ params },
-		);
+		const response = await this.request<
+			NormalFeedResponse | ModeratorFeedResponse
+		>("GET", "posts", { params });
+
+		if (options?.comments) {
+			for (const post of response.posts) {
+				const fullPost = await this.getPost(post.publicId);
+				post.comments = fullPost.comments;
+			}
+		}
+
+		response.posts = this.createPostInstances(response.posts);
+		return response as NormalFeed | ModeratorFeed;
 	}
 
 	/**

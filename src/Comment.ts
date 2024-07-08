@@ -37,7 +37,7 @@ export class Comment {
 	/** The total number of replies the comment has, including all deeper comments. */
 	public readonly noReplies!: number;
 	/** The number of direct replies the comment has. This does not include replies deeper than 1 more than the comment itself. */
-	public readonly noDirectReplies!: number;
+	public readonly noRepliesDirect!: number;
 	/** The comment IDs of all ancestor comments starting from the top-most comment. */
 	public readonly ancestors!: string[] | null;
 
@@ -86,7 +86,7 @@ export class Comment {
 	constructor(data: CommentData, client: DiscuitClient) {
 		this.client = client;
 
-		Object.assign(data, this);
+		Object.assign(this, data);
 	}
 
 	/**

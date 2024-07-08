@@ -90,7 +90,7 @@ export type CommentData = {
 	/** The total number of replies the comment has, including all deeper comments. */
 	noReplies: number;
 	/** The number of direct replies the comment has. This does not include replies deeper than 1 more than the comment itself. */
-	noDirectReplies: number;
+	noRepliesDirect: number;
 	/** The comment IDs of all ancestor comments starting from the top-most comment. */
 	ancestors: string[] | null;
 

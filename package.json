@@ -1,7 +1,7 @@
 {
 	"name": "discuit-ts",
 	"author": "Taylor <ttaylor-st@murena.io",
-	"version": "0.0.3",
+	"version": "0.1.0",
 	"description": "a TypeScript library for interacting with the discuit api.",
 	"license": "MIT",
 	"homepage": "https://github.com/ttaylor-st/discuit-ts?tab=readme-ov-file",

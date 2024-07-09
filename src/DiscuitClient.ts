@@ -244,7 +244,11 @@ class DiscuitClient {
 		if (options?.comments) {
 			for (const post of response.posts) {
 				const fullPost = await this.getPost(post.publicId);
-				post.comments = fullPost.comments;
+				if (fullPost.comments) {
+					post.comments = fullPost.comments.map(
+						(commentData) => new Comment(commentData, this),
+					);
+				}
 			}
 		}
 

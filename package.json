@@ -1,7 +1,7 @@
 {
 	"name": "discuit-ts",
 	"author": "Taylor <ttaylor-st@murena.io",
-	"version": "0.4.1",
+	"version": "0.4.2",
 	"description": "a TypeScript library for interacting with the discuit api.",
 	"license": "MIT",
 	"homepage": "https://github.com/ttaylor-st/discuit-ts?tab=readme-ov-file",
@@ -22,12 +22,10 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.8.3",
-		"@types/bun": "latest"
+		"@types/bun": "latest",
+		"bun-plugin-dts": "^0.2.3"
 	},
 	"peerDependencies": {
 		"typescript": "^5.0.0"
-	},
-	"dependencies": {
-		"bun-plugin-dts": "^0.2.3"
 	}
 }

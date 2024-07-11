@@ -8,8 +8,6 @@ import { Comment } from "./Comment";
 import { Post } from "./Post";
 import type {
 	CommentData,
-	CommentFeed,
-	CommentFeedResponse,
 	InitialResponseData,
 	ModeratorFeed,
 	ModeratorFeedResponse,
@@ -64,7 +62,7 @@ class DiscuitClient {
 	 */
 	constructor(config: ApiConfig) {
 		this.baseURL =
-			config.baseURL?.replace(/\/?$/, "/") || "http://discuit.net/api/";
+			config.baseURL?.replace(/\/?$/, "/") || "https://discuit.net/api/";
 	}
 
 	/**
@@ -228,7 +226,7 @@ class DiscuitClient {
 	}): Promise<NormalFeed | ModeratorFeed> {
 		const params: Record<string, string> = {};
 
-		params.feed = options?.feed || "home";
+		params.feed = options?.feed || "all";
 		params.sort = options?.sort || "latest";
 
 		if (options?.filter) params.filter = options.filter;

@@ -161,8 +161,6 @@ export class Comment {
 	 * @async
 	 */
 	async comment(body: string): Promise<Comment> {
-		const comment = await this.client.comment(this.postPublicId, body, this.id);
-		Object.assign(this, comment);
-		return this;
+		return await this.client.comment(this.postPublicId, body, this.id);
 	}
 }
